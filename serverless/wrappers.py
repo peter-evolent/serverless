@@ -48,7 +48,10 @@ class Request:
     @property
     def query(self):
         """Returns HTTP query string as dict"""
-        query_params = self.event.get('queryStringParameters', dict())
+        query_params = self.event.get('queryStringParameters')
+
+        if not query_params:
+            return dict()
 
         return query_params
 

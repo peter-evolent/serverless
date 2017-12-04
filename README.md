@@ -25,8 +25,16 @@ def handler(req):
 This is a Python3.6 module available through public github repository
 
 ```
-pip install https://github.com/peter-evolent/serverless
+pip install git+https://github.com/peter-evolent/serverless.git
 ``` 
+
+## Tests
+
+To run the test suite, first install dev dependencies, then run pytes command
+```
+pip install -r requirements-dev.txt
+pytest --cov=serverless
+```
 
 ## License
 

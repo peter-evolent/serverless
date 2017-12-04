@@ -1,0 +1,13 @@
+# General
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+
+# Environments
+venv/
+
+# Unit test / coverage reports
+.cache
+.coverage

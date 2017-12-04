@@ -23,16 +23,6 @@ class ServerlessError(Exception):
         self.errors = errors
 
 
-class ServerError(ServerlessError):
-    """Base for 5xx responses."""
-    pass
-
-
-class InternalServerError(ServerError):
-    """Exception mapping a ``500 Internal Server Error`` response."""
-    status_code = 500
-
-
 class ClientError(ServerlessError):
     """Base class for all client error (HTTP 4xx) responses"""
 

@@ -1,4 +1,4 @@
-from serverless.decorators import lambda_handler
+from serverless import lambda_handler
 from serverless.wrappers import Response
 from serverless.exceptions import BadRequest
 

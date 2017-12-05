@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from setuptools import setup, find_packages
 
 
@@ -21,8 +22,10 @@ requires = []
 
 
 def get_version():
+    base_dir = os.path.dirname(__file__)
+
     version = {}
-    with open('serverless/version.py') as fp:
+    with open(os.path.join(base_dir, 'serverless', 'version.py')) as fp:
         exec(fp.read(), version)
 
     return version['version_info']

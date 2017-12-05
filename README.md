@@ -35,7 +35,7 @@ This is a Python3.6 module available through public github repository.
 
 
 ```
-pip install -e git+https://github.com/peter-evolent/serverless.git@master#egg=serverless
+pip install -U git+https://github.com/peter-evolent/serverless.git@master
 ```
 
 ## Tests

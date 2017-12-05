@@ -16,6 +16,7 @@
 
 """Serverless wrapper classes"""
 import json
+from json import JSONDecodeError
 
 from serverless.exceptions import BadRequest
 
@@ -37,6 +38,9 @@ class Request:
     Raises:
         BadRequest: if event['body'] is not None and not deserializable
 
+    Todo:
+        * add pathParameters
+
     .. _AWS Lambda python programming model:
        http://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
     """
@@ -45,25 +49,38 @@ class Request:
         self.context = context
         self._data = None
 
-    # TODO: add pathParameters
-
     @property
     def data(self):
-        """Returns HTTP body as dict"""
+        """
+        Parses event and return body as dict
+
+        Returns:
+            data (dict): a dict containing event['body'] data
+
+        Raises:
+            AttributeError: if event is not dict like object
+            JSONDEcodeError: if event body is not a valid JSON document
+
+        .. _JSONDecodeError:
+           https://docs.python.org/3/library/json.html#json.JSONDecodeError
+        """
         if not self._data:
             body = self.event.get('body', None)
             try:
                 self._data = json.loads(body) if body else dict()
-            except json.JSONDecodeError as e:
-                # TODO: check how to stringify this error,
-                # https://docs.python.org/3/library/json.html#json.JSONDecodeError
+            except JSONDecodeError as e:
                 errors = (str(e))
                 raise BadRequest('Malformed request body', errors)
         return self._data
 
     @property
     def query(self):
-        """Returns HTTP query string as dict"""
+        """
+        Returns HTTP query string as dict
+
+        Raises:
+            AttributeError: if event is not dict like object
+        """
         query_params = self.event.get('queryStringParameters')
 
         if not query_params:
@@ -96,7 +113,15 @@ class Response:
         self.headers = {**self._security_headers, **self._headers}
 
     def to_lambda_output(self):
-        """Returns dictionary compatiable with AWS Lambda output format"""
+        """
+        Returns AWS Lambda compatible response populated with the given
+        data, status_code, and headers
+
+        Returns:
+            resp (dict): AWS Lambda compatible response data
+        Raises:
+            TypeError: if self.data is not JSON serializable
+        """
         body = json.dumps(self.data)
         resp = {
             'statusCode': self.status_code,

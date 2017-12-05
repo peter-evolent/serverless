@@ -14,24 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import namedtuple
 import json
+
+
+LambdaOutput = namedtuple('LambdaOutput', ['status_code', 'data', 'headers'])
 
 
 def parse_lambda_output(output):
     """
-    Parses AWS Lambda output and returns status_code and body as tuple
+    Parses AWS Lambda output and returns LambdaOutput
 
     Args:
         output (dict): an AWS Lambda compatible response
 
     Returns:
-        result (tuple): status_code (int), data (dict) 
+        result (LambdaOutput): parsed data 
     """
     status_code = output['statusCode']
+    headers = output['headers']
     body = output['body']
     data = json.loads(body) if body else None
 
-    return status_code, data
+    return LambdaOutput(status_code, data, headers)
 
 def build_event(body_data, query_data=dict()):
     """

@@ -22,30 +22,38 @@ from tests import utils
 class TestResponse:
     def test_response(self):
         resp = Response()
-        result = resp.to_lambda_output()
-        status_code, data = utils.parse_lambda_output(result)
+        lambda_output = resp.to_lambda_output()
+        result = utils.parse_lambda_output(lambda_output)
 
-        assert status_code == 200
-        assert data == None
-        assert isinstance(result['headers'], dict)
+        assert result.status_code == 200
+        assert result.data == None
+        assert isinstance(result.headers, dict)
 
     def test_response_with_data(self, dict_data):
         resp = Response(dict_data)
-        result = resp.to_lambda_output()
-        status_code, data = utils.parse_lambda_output(result)
+        lambda_output = resp.to_lambda_output()
+        result = utils.parse_lambda_output(lambda_output)
 
-        assert status_code == 200
-        assert data == dict_data
+        assert result.status_code == 200
+        assert result.data == dict_data
 
     def test_response_with_status_code(self):
         expected_status_code = 999
 
         resp = Response(None, expected_status_code)
-        result = resp.to_lambda_output()
-        status_code, data = utils.parse_lambda_output(result)
+        lambda_output = resp.to_lambda_output()
+        result = utils.parse_lambda_output(lambda_output)
 
-        assert status_code == expected_status_code
-        assert data == None
+        assert result.status_code == expected_status_code
+        assert result.data == None
+
+    def test_response_with_headers(self, dict_data):
+        resp = Response(headers=dict_data)
+        lambda_output = resp.to_lambda_output()
+        result = utils.parse_lambda_output(lambda_output)
+
+        assert result.status_code == 200
+        assert dict_data.items() <= result.headers.items()
 
 
 class TestRequest:

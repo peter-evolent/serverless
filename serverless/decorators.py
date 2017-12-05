@@ -73,6 +73,13 @@ def lambda_handler(func):
 
         try:
             resp = func(req)
+
+            if not isinstance(resp, Response):
+                message = (
+                    'Invalid return value from handler. '
+                    'It should be either Response or Exception'
+                )
+                raise TypeError(message)
         except ServerlessError as e:
             status_code = e.status_code
             message = e.message if e.message else e.__class__.__name__

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from serverless import lambda_handler
+from serverless.decorators import lambda_handler
 from serverless.wrappers import Response
 from serverless.exceptions import BadRequest
 

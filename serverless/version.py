@@ -14,26 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import setup, find_packages
+"""Serverless packge verion info"""
 
-
-requires = []
-
-
-def get_version():
-    version = {}
-    with open('serverless/version.py') as fp:
-        exec(fp.read(), version)
-
-    return version['version_info']
-
-
-setup(
-    name='serverless',
-    description='serverless sdk',
-    version=get_version(),
-    packages=find_packages(exclude=['tests']),
-    install_requires=requires,
-    author='Peter Hwang',
-    license='Apache License 2.0'
-)
+version_info = '0.0.1'

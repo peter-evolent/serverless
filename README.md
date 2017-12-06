@@ -10,7 +10,6 @@ from serverless import lambda_handler, Response, BadRequest
 def handler(req):
     # once decorated, handler will receive Request object as its argument.
     # Request object has data, query attributes to access HTTP Request body and query strings
-
     body_data_dict = req.data
     query_dict = req.query
 
@@ -85,6 +84,17 @@ def handler(req):
         raise BadRequest('Invalid data')
     
     return Response(req.event)
+
+
+"""
+excepted output (if user_id key not found in req.data): 
+
+HTTP/1.1 400 Bad Request
+{
+    "errors": [],
+    "message": "Invalid data"
+}
+"""
 ```
 
 Server errors(5XX):

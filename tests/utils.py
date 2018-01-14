@@ -38,13 +38,14 @@ def parse_lambda_output(output):
 
     return LambdaOutput(status_code, data, headers)
 
-def build_event(body_data, query_data=dict()):
+def build_event(body_data, query_params=dict(), path_params=dict()):
     """
     Builds AWS Lambda event using the provided data
 
     Args:
         body_data (dict): data loaded to the body of event
-        query_data (dict): data loaded to query params of event
+        query_params (dict): data loaded to query params of event
+        path_params (dict): data loaded to path params of event
 
     Returns:
         event (dict): AWS Lambda event
@@ -52,7 +53,8 @@ def build_event(body_data, query_data=dict()):
     body = json.dumps(body_data) if body_data else None
     event = {
         'body': body,
-        'queryStringParameters': query_data
+        'queryStringParameters': query_params,
+        'pathParameters': path_params
     }
 
     return event

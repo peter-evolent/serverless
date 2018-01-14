@@ -70,7 +70,7 @@ def test_lambda_handler_with_data(context, dict_data):
     assert result.data['req_data'] == dict_data
 
 def test_lambda_handler_with_query(context, dict_data):
-    event = utils.build_event(None, dict_data)
+    event = utils.build_event(None, query_params=dict_data)
 
     @lambda_handler
     def handler(req):
@@ -85,6 +85,23 @@ def test_lambda_handler_with_query(context, dict_data):
 
     assert result.status_code == 200
     assert result.data['req_query'] == dict_data
+
+def test_lambda_handler_with_path_params(context, dict_data):
+    event = utils.build_event(None, path_params=dict_data)
+
+    @lambda_handler
+    def handler(req):
+        payload = {
+            'req_params': req.params
+        }
+
+        return Response(payload)
+
+    lambda_output = handler(event, context)
+    result = utils.parse_lambda_output(lambda_output)
+
+    assert result.status_code == 200
+    assert result.data['req_params'] == dict_data
 
 def test_lambda_handler_with_status_code(context):
     expected_status_code = 999

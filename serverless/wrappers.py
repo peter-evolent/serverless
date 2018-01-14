@@ -34,6 +34,7 @@ class Request:
         context (LambdaContext): AWS Lambda context
         data (dict): request body
         query (dict): query string parameters
+        params (dict): path parameters
 
     Raises:
         BadRequest: if event['body'] is not None and not deserializable
@@ -81,12 +82,17 @@ class Request:
         Raises:
             AttributeError: if event is not dict like object
         """
-        query_params = self.event.get('queryStringParameters')
+        return self.event.get('queryStringParameters', dict())
 
-        if not query_params:
-            return dict()
+    @property
+    def params(self):
+        """
+        Returns HTTP path params as dict
 
-        return query_params
+        Raises:
+            AttributeError: if event is not dict like object
+        """
+        return self.event.get('pathParameters', dict())
 
 
 class Response:

@@ -76,10 +76,19 @@ class TestRequest:
         assert req.query == dict()
 
     def test_request_with_query(self, dict_data, context):
-        event = utils.build_event(None, dict_data)
+        event = utils.build_event(None, query_params=dict_data)
         req = Request(event, context)
 
         assert req.event == event
         assert req.context == context
         assert req.data == dict()
         assert req.query == dict_data
+
+    def test_request_with_path_params(self, dict_data, context):
+        event = utils.build_event(None, path_params=dict_data)
+        req = Request(event, context)
+
+        assert req.event == event
+        assert req.context == context
+        assert req.data == dict()
+        assert req.params == dict_data

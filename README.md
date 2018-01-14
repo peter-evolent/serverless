@@ -12,6 +12,7 @@ def handler(req):
     # Request object has data, query attributes to access HTTP Request body and query strings
     body_data_dict = req.data
     query_dict = req.query
+    path_params_dict = req.params
 
     if 'expected_key' not in body_data_dict:
         # Raise serverless Exceptions, and response will be automatically generated.
@@ -44,6 +45,7 @@ NOTE: `data` and `query` attributes will always return dict
 Attributes:
 - data: JSON Body as dict
 - query: Query string params as dict
+- params: Path params as dict
 - event: AWS Lambda event
 - context: AWS Lambda context
 
@@ -107,7 +109,7 @@ Client errors(4XX):
 - NotFound(404)
 - UnprocessableEntity(422)
 
-Any other exceptions raised from the handler will be mapped to ServerlessError error.
+Any other exceptions raised from the handler will be mapped to ServerlessError.
 
 ## Installation
 
@@ -126,7 +128,6 @@ pytest --cov=serverless -v
 
 ## Todo
 
-- add path parameter to request
 - support list of error details
 
 ## License

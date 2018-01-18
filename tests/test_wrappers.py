@@ -13,8 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import pytest
 
 from serverless.wrappers import Request, Response
+from serverless.exceptions import BadRequest
 
 from tests import utils
 
@@ -65,6 +67,16 @@ class TestRequest:
         assert req.context == context
         assert req.data == dict()
         assert req.query == dict()
+
+    def test_request_with_invalid_json_data(self, context):
+        invalid_json = 'This is not a json'
+        event = {
+            'body': invalid_json
+        }
+        req = Request(event, context)
+
+        with pytest.raises(BadRequest):
+            req.data
 
     def test_request_with_data(self, dict_data, context):
         event = utils.build_event(dict_data)

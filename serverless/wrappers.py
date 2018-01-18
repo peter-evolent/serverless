@@ -17,6 +17,7 @@
 """Serverless wrapper classes"""
 import json
 from json import JSONDecodeError
+import logging
 
 from serverless.exceptions import BadRequest
 
@@ -49,6 +50,7 @@ class Request:
         self.event = event
         self.context = context
         self._data = None
+        self.logger = logging.getLogger(__name__)
 
     @property
     def data(self):
@@ -70,6 +72,7 @@ class Request:
             try:
                 self._data = json.loads(body) if body else dict()
             except JSONDecodeError as e:
+                self.logger.info('Failed to decode request body=%r', body)
                 errors = (str(e))
                 raise BadRequest('Malformed request body', errors)
         return self._data

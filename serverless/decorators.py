@@ -57,6 +57,8 @@ def lambda_handler(func):
     Raises:
         TypeErorr: if event, context are not provided when invoking func_wrapper
     """
+    logger = logging.getLogger(__name__)
+
     @wraps(func)
     def func_wrapper(event, context):
         """
@@ -86,7 +88,7 @@ def lambda_handler(func):
 
             resp = to_error_response(message, e.errors, status_code)
         except Exception as e:
-            logging.exception(e)
+            logger.exception(e)
             status_code = 500
             message = 'InternalServerError'
             errors = tuple()

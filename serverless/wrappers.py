@@ -15,11 +15,28 @@
 # limitations under the License.
 
 """Serverless wrapper classes"""
+from datetime import date, datetime
 import json
-from json import JSONDecodeError
 import logging
+import uuid
 
 from serverless.exceptions import BadRequest
+
+
+class ServerlessJsonEncoder(json.JSONEncoder):
+    """
+    The default Serverless JSON encoder. This one extends python's default json encoder to
+    support serialization of ``date``, ``datetime`` and ``UUID`` objects.
+
+    NOTE: ISO-8601 format willbe used for date serialization.
+    """
+    def default(self, o): # pylint: disable=E0202
+        """Serializes object"""
+        if isinstance(o, (date, datetime)):
+            return o.isoformat()
+        if isinstance(o, uuid.UUID):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 
 class Request:
@@ -39,9 +56,6 @@ class Request:
 
     Raises:
         BadRequest: if event['body'] is not None and not deserializable
-
-    Todo:
-        * add pathParameters
 
     .. _AWS Lambda python programming model:
        http://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
@@ -71,7 +85,7 @@ class Request:
             body = self.event.get('body', None)
             try:
                 self._data = json.loads(body) if body else dict()
-            except JSONDecodeError as e:
+            except json.JSONDecodeError as e:
                 self.logger.info('Failed to decode request body=%r', body)
                 errors = (str(e))
                 raise BadRequest('Malformed request body', errors)
@@ -121,20 +135,26 @@ class Response:
         self._headers = headers if headers else dict()
         self.headers = {**self._security_headers, **self._headers}
 
+    @property
+    def body(self):
+        """Returns string representation of body"""
+        return json.dumps(self.data, cls=ServerlessJsonEncoder)
+
     def to_lambda_output(self):
         """
-        Returns AWS Lambda compatible response populated with the given
-        data, status_code, and headers
+        Returns AWS Lambda compatible response populated with
+        the given data, status_code, and headers.
+        By default, it uses ServerlessJsonEncoder for serialization.
 
         Returns:
             resp (dict): AWS Lambda compatible response data
+
         Raises:
             TypeError: if self.data is not JSON serializable
         """
-        body = json.dumps(self.data)
         resp = {
             'statusCode': self.status_code,
-            'body': body,
+            'body': self.body,
             'headers': self.headers
         }
 

@@ -52,7 +52,20 @@ Attributes:
 ## Response
 
 This is the helper class that you will use to return data to the end user.
-It will also add basic security headers
+In addition to the native data types, it also supports `date`, `datetime`, and `UUID` types.
+The following security headers will be used by default,
+
+```python
+{
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Cache-Control': 'no-cache, must-revalidate',
+    'Pragma': 'no-cache',
+    'X-XSS-Protection': '1; mode=block'
+}
+```
+
+Check the example codes below for how to create a response
 
 ```python
 some_data = {'score': 20}

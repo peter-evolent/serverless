@@ -87,7 +87,7 @@ def lambda_handler(func):
             message = e.message if e.message else e.__class__.__name__
 
             resp = to_error_response(message, e.errors, status_code)
-        except Exception as e:
+        except Exception as e: # pylint: disable=W0703
             logger.exception(e)
             status_code = 500
             message = 'InternalServerError'

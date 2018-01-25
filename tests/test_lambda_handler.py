@@ -13,6 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from datetime import date, datetime, timezone
+import uuid
 
 from serverless.decorators import lambda_handler
 from serverless.wrappers import Response
@@ -54,11 +56,23 @@ def test_lambda_handler_invalid_return_value(context):
 
 def test_lambda_handler_with_data(context, dict_data):
     event = utils.build_event(dict_data)
+    uuid_obj = uuid.uuid4()
+    date_obj = date(2018, 1, 1)
+    datetime_obj = datetime(2018, 1, 1,
+        hour=1,
+        minute=2,
+        second=3,
+        microsecond=45678, 
+        tzinfo=timezone.utc
+    )
 
     @lambda_handler
     def handler(req):
         payload = {
-            'req_data': req.data
+            'req_data': req.data,
+            'uuid': uuid_obj,
+            'date': date_obj,
+            'datetime': datetime_obj
         }
 
         return Response(payload)
@@ -68,6 +82,9 @@ def test_lambda_handler_with_data(context, dict_data):
 
     assert result.status_code == 200
     assert result.data['req_data'] == dict_data
+    assert uuid.UUID(result.data['uuid']) == uuid_obj
+    assert result.data['date'] == '2018-01-01'
+    assert result.data['datetime'] == '2018-01-01T01:02:03.045678+00:00'
 
 def test_lambda_handler_with_query(context, dict_data):
     event = utils.build_event(None, query_params=dict_data)

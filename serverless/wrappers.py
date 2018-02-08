@@ -20,6 +20,7 @@ import json
 import logging
 import uuid
 
+from serverless.compat import JSONDecodeError
 from serverless.exceptions import BadRequest
 
 
@@ -76,7 +77,7 @@ class Request:
 
         Raises:
             AttributeError: if event is not dict like object
-            JSONDEcodeError: if event body is not a valid JSON document
+            JSONDecodeError: if event body is not a valid JSON document
 
         .. _JSONDecodeError:
            https://docs.python.org/3/library/json.html#json.JSONDecodeError
@@ -85,7 +86,7 @@ class Request:
             body = self.event.get('body', None)
             try:
                 self._data = json.loads(body) if body else dict()
-            except json.JSONDecodeError as e:
+            except JSONDecodeError as e:
                 self.logger.info('Failed to decode request body=%r', body)
                 errors = (str(e))
                 raise BadRequest('Malformed request body', errors)
@@ -132,8 +133,10 @@ class Response:
     def __init__(self, data=None, status_code=200, headers=None):
         self.data = data
         self.status_code = status_code
-        self._headers = headers if headers else dict()
-        self.headers = {**self._security_headers, **self._headers}
+        self.headers = self._security_headers.copy()
+
+        if headers:
+            self.headers.update(headers)
 
     @property
     def body(self):

@@ -13,30 +13,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import os
 from setuptools import setup, find_packages
+
+import serverless
 
 
 requires = []
 
 
-def get_version():
-    base_dir = os.path.dirname(__file__)
-
-    version = {}
-    with open(os.path.join(base_dir, 'serverless', 'version.py')) as fp:
-        exec(fp.read(), version)
-
-    return version['version_info']
-
+def long_description():
+    with open('README.md', 'r') as f:
+        return f.read()
 
 setup(
     name='serverless',
-    description='serverless sdk',
-    version=get_version(),
+    version=serverless.__version__,
+    description=serverless.__doc__.strip(),
+    long_description=long_description(),
+    author=serverless.__author__,
+    license=serverless.__licence__,    
     packages=find_packages(exclude=['tests']),
-    install_requires=requires,
-    author='Peter Hwang',
-    license='Apache License 2.0'
+    install_requires=requires
 )

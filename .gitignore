@@ -1,13 +1,23 @@
-# General
-.DS_Store
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
 
-# Environments
-venv/
+# Distribution / packaging
+build/
+dist/
+*.egg-info
 
 # Unit test / coverage reports
 .cache
 .coverage
+.tox/
+.pytest_cache/
+
+# Environments and dependencies
+venv*
+
+# vim
+*.swp
+
+# OSX
+.DS_Store

@@ -1,6 +1,5 @@
-# Dev requirements
-pytest-cov==2.5.1
-pylint==1.7.4
-
-# Test requirements
-pytest==3.3.0
+tox
+pytest
+pytest-cov
+pylint
+wheel

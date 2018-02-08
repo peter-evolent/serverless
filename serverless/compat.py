@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Serverless packge verion info"""
+"""Python 2.7 and python 3.6 compatibility"""
+import sys
 
-version_info = '0.0.4'
+PY3 = sys.version_info[0] == 3
+
+
+
+if PY3:
+    from json import JSONDecodeError
+else:
+    JSONDecodeError = ValueError

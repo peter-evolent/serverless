@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Serverless SDK"""
-from serverless import version
+"""Serverless - SDK for building serverless app"""
 from serverless.decorators import lambda_handler
 from serverless.exceptions import (
     ServerlessError, BadRequest, Unauthorized, Forbidden, NotFound, UnprocessableEntity
@@ -23,4 +22,6 @@ from serverless.exceptions import (
 from serverless.wrappers import Request, Response
 
 
-__version__ = version.version_info
+__version__ = '0.0.5'
+__author__ = 'Peter Hwang'
+__licence__ = 'Apache License 2.0'

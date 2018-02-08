@@ -13,9 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from datetime import date, datetime, timezone
-import pytest
+from datetime import date, datetime
 import uuid
+
+import pytest
 
 from serverless.wrappers import Request, Response
 from serverless.exceptions import BadRequest
@@ -54,14 +55,13 @@ class TestResponse:
             hour=1,
             minute=2,
             second=3,
-            microsecond=45678, 
-            tzinfo=timezone.utc
+            microsecond=45678
         )
         resp = Response(datetime_obj)
         lambda_output = resp.to_lambda_output()
         result = utils.parse_lambda_output(lambda_output)
 
-        assert result.data == '2018-01-01T01:02:03.045678+00:00'
+        assert result.data == '2018-01-01T01:02:03.045678'
 
     def test_response_with_uuid_data(self):
         _id = uuid.uuid4()
@@ -87,7 +87,7 @@ class TestResponse:
         result = utils.parse_lambda_output(lambda_output)
 
         assert result.status_code == 200
-        assert dict_data.items() <= result.headers.items()
+        assert all([result.headers[k] == v for k, v in dict_data.items()])
 
 
 class TestRequest:
